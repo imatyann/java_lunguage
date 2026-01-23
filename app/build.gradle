@@ -33,11 +33,32 @@ java {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass = 'org.example.App'
+    mainClass = 'javalanguage.Main'
 }
+
 
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+
+tasks.withType(Test) {
+    testLogging {
+        showStandardStreams = true
+        events "failed", "passed", "skipped"
+        exceptionFormat "full"
+    }
+}
+
+
+// app/build.gradle
+
+tasks.named("run", JavaExec) {
+    // プロジェクト直下（java_lunguage）を基準にする
+    workingDir = rootProject.projectDir
 }

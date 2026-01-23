@@ -1,4 +1,4 @@
-package src.javalanguage.token;
+package javalanguage.token;
 public enum TokenType {
     INT,    //整数リテラル
     PLUS,   // +

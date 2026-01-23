@@ -32,8 +32,8 @@ public final class Lexer {
                 // 整数に出会ったら、初めて整数以外に出会うかiがlを超すまで繰り返す
                 int value = 0;
                 int startI = i;
-                while (Character.isDigit(source.charAt(i)) && (i < l) ) {
-                    int n = word - '0';
+                while ((i < l) && Character.isDigit(source.charAt(i)) ) {
+                    int n = source.charAt(i) - '0';
                     value = value * 10 + n ;
                     i ++;
                 }
@@ -46,16 +46,28 @@ public final class Lexer {
             switch (word) {
                 case '+':
                     tokens.add(new Token(TokenType.PLUS, i));
+                    i++;
+                    break;
                 case '-':
                     tokens.add(new Token(TokenType.MINUS, i));
+                    i++;
+                    break;
                 case '*':
                     tokens.add(new Token(TokenType.MUL, i));
+                    i++;
+                    break;
                 case '/':
                     tokens.add(new Token(TokenType.DIV, i));
+                    i++;
+                    break;
                 case '(':
                     tokens.add(new Token(TokenType.LPAREN, i));
+                    i++;
+                    break;
                 case ')':
                     tokens.add(new Token(TokenType.RPAREN, i));
+                    i++;
+                    break;
                 default:
                     // 未知の文字が生じた場合のエラー
                     throw new LexError(i, "未知の文字：" + word);

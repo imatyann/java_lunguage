@@ -1,4 +1,4 @@
-package src.javalanguage.token;
+package javalanguage.token;
 public final class Token {
     public final TokenType type;
     public final int pos;
