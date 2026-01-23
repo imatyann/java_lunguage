@@ -27,7 +27,7 @@ public final class Evaluator {
                 case MUL:
                     return l * r;
                 case DIV:
-                    if (r == 0) throw new RuntimeError(b.pos, "Division by zero");
+                    if (r == 0) throw new RuntimeError(b.getPos(), "Division by zero");
                     return l / r;
                 default:
                     break;
@@ -35,6 +35,6 @@ public final class Evaluator {
 
         }
 
-        throw new RuntimeError(0, "Unsupported operator: " + e);
+        throw new RuntimeError(e.getPos(), "Unsupported operator: " + e);
     }
 }

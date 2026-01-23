@@ -32,6 +32,8 @@ public class Main {
             } else {
                 source = (args.length >= 1) ? String.join(" ", args) : "";
             }
+
+            
             List<Token> tokens = lexer.tokenize(source);
             Expr ex = parser.parse(tokens);
             int result = eval.eval(ex);

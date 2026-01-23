@@ -17,9 +17,10 @@ public final class BinOp implements Expr{
     }
 
     @Override
-    public int pos() {
-        return pos;
+    public int getPos(){
+        return this.pos;
     }
+
     
 
 

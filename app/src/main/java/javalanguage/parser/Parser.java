@@ -47,14 +47,13 @@ public class Parser {
         Expr e = parseTerm();
 
         while(true){
-
-            TokenType ty = current().type;
+            Token t = current();
+            TokenType ty = t.type;
             if (ty == TokenType.PLUS || ty == TokenType.MINUS){
                 TokenType op = ty;
-                int opPos = current().pos;
                 consume(ty);
                 Expr rhs = parseTerm();
-                e = new BinOp(op, e, rhs, opPos);
+                e = new BinOp(op, e, rhs, t.pos);
                 continue;
             }
             break;
@@ -64,22 +63,21 @@ public class Parser {
 
     // 現在読んでいる箇所から始まる乗除算式を翻訳し、BinOp式を出力する関数
     private Expr parseTerm() throws ParseError{
-        Expr t = parseFactor();
+        Expr e = parseFactor();
 
         while(true){
-
-            TokenType ty = current().type;
+            Token t = current();
+            TokenType ty = t.type;
             if (ty == TokenType.MUL || ty == TokenType.DIV){
                 TokenType op = ty;
-                int opPos = current().pos;
                 consume(ty);
                 Expr rhs = parseFactor();
-                t = new BinOp(op, t, rhs, opPos);
+                e = new BinOp(op, e, rhs, t.pos);
                 continue;
             }
             break;
         }
-        return t;
+        return e;
     }
 
     // Parserが現在読んでいるTokenを出力する関数

@@ -11,7 +11,7 @@ public final class IntLit implements Expr{
     }
 
     @Override
-    public int pos(){
-        return pos;
+    public int getPos(){
+        return this.pos;
     }
 }
