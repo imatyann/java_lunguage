@@ -77,6 +77,18 @@ public class LexerTest {
     }
 
     @Test
+    void tokenize_var() throws LexError {
+        Lexer lexer = new Lexer();
+        List<Token> ts = lexer.tokenize("x = 3");
+
+        assertEquals(TokenType.VAR, ts.get(0).type);
+        assertEquals(TokenType.EQUAL, ts.get(1).type);
+        assertEquals(TokenType.INT, ts.get(2).type);  
+        assertEquals(TokenType.EOF, ts.get(3).type);  
+                 
+    }
+
+    @Test
     void tokenize_unknown_character_throws() {
         Lexer lexer = new Lexer();
 

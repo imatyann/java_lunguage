@@ -40,7 +40,7 @@ public final class Lexer {
 
                 tokens.add(new Token(TokenType.INT, startI, value));
                 continue;
-            }
+            } 
 
             // 演算子と括弧のチェック
             switch (word) {
@@ -68,10 +68,33 @@ public final class Lexer {
                     tokens.add(new Token(TokenType.RPAREN, i));
                     i++;
                     break;
+                case '=':
+                    tokens.add(new Token(TokenType.EQUAL, i));
+                    i++;
+                    break;
                 default:
-                    // 未知の文字が生じた場合のエラー
-                    throw new LexError(i, "未知の文字：" + word);
+                    if (Character.isLetter(word) || word == '_'){
+                    // 文字列に出会ったら、文字列全てを一つのトークンにする
+                        String name = "";
+                        int startI = i;
+                        while (i < l && 
+                            (Character.isLetter(source.charAt(i)) ||
+                             Character.isDigit(source.charAt(i)) ||
+                             source.charAt(i) == '_')) {
+                            char n = source.charAt(i);
+                            name = name + n ;
+                            i ++;
+                        }
+                        tokens.add(new Token(TokenType.VAR, startI, name));
+                        break;
+                    } else {
+                        // 未知の文字が生じた場合のエラー
+                        throw new LexError(i, "未知の文字：" + word);
+                    }
+
                 }
+
+
         }
 
         tokens.add(new Token(TokenType.EOF, l));
