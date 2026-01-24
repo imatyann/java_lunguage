@@ -3,6 +3,7 @@ package javalanguage.eval;
 import javalanguage.ast.Expr;
 import javalanguage.ast.BinOp;
 import javalanguage.ast.IntLit;
+import javalanguage.ast.UnaryOp;
 import javalanguage.error.RuntimeError;
 
 import javalanguage.token.TokenType;
@@ -29,6 +30,19 @@ public final class Evaluator {
                 case DIV:
                     if (r == 0) throw new RuntimeError(b.getPos(), "Division by zero");
                     return l / r;
+                default:
+                    break;
+            }
+
+        }
+
+        if (e instanceof UnaryOp){
+            UnaryOp b = (UnaryOp) e;
+            TokenType t = b.op;
+            int v = eval(b.expr);
+            switch (t) {
+                case MINUS:
+                    return -1 * v;
                 default:
                     break;
             }

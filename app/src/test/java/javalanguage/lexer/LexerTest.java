@@ -60,11 +60,30 @@ public class LexerTest {
     }
 
     @Test
+    void tokenize_negative() throws LexError {
+        Lexer lexer = new Lexer();
+        List<Token> ts = lexer.tokenize("1+(2*-3)");
+
+        assertEquals(TokenType.INT, ts.get(0).type);
+        assertEquals(TokenType.PLUS, ts.get(1).type);
+        assertEquals(TokenType.LPAREN, ts.get(2).type);
+        assertEquals(TokenType.INT, ts.get(3).type);
+        assertEquals(TokenType.MUL, ts.get(4).type);
+        assertEquals(TokenType.MINUS, ts.get(5).type);
+        assertEquals(TokenType.INT, ts.get(6).type);
+        assertEquals(TokenType.RPAREN, ts.get(7).type);
+        assertEquals(TokenType.EOF, ts.get(8).type);
+           
+    }
+
+    @Test
     void tokenize_unknown_character_throws() {
         Lexer lexer = new Lexer();
 
         LexError e = assertThrows(LexError.class, () -> lexer.tokenize("1a"));
         assertEquals(1, e.pos);
     }
+
+    
 
 }

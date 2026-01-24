@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import javalanguage.ast.BinOp;
 import javalanguage.ast.Expr;
 import javalanguage.ast.IntLit;
+import javalanguage.ast.UnaryOp;
 import javalanguage.error.RuntimeError;
+import javalanguage.token.Token;
 import javalanguage.token.TokenType;
 
 
@@ -43,4 +45,18 @@ public class EvalTest {
         assertEquals(3, evaluator.eval(ex_paren));
         
     }
+
+    @Test
+    void eval_unary() throws RuntimeError{
+        Evaluator evaluator = new Evaluator();
+        // 1 + 2 * -3 = 7
+        Expr ex_long = new BinOp(TokenType.PLUS, new IntLit(1, 0), new BinOp(TokenType.MUL, new IntLit(2, 2), new UnaryOp(TokenType.MINUS, new IntLit(3, 5), 4), 3), 1);
+        assertEquals(-5, evaluator.eval(ex_long));
+
+        // 4 * - ( 2 + 3 )
+        Expr ex_paren = new BinOp(TokenType.MUL, new IntLit(4, 0), new UnaryOp(TokenType.MINUS, new BinOp(TokenType.PLUS, new IntLit(2, 3),new IntLit(3, 5), 4), 2), 1);
+        assertEquals(-20, evaluator.eval(ex_paren));
+        
+    }
+
 }

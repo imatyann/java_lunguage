@@ -78,9 +78,10 @@ RuntimeError: 評価で発生 0除算など
 入力全体は式Exprを一つ含む。
 Exprを一つ読み取った後がEOFでないなら構文エラー
 2) 
-Exprを三段階に評価する
+Exprを四段階に評価する
 ・Expr：加減算レベル 優先度が最低で、最後に処理をする
 ・Term：乗除算レベル 複数含まれる
+・Unary：負の数の演算 最も優先度が高い
 ・Factor：最小単位 値や括弧の計算
 3) Expr
 Exprは、まずTermを一つ読む
@@ -88,10 +89,15 @@ Exprは、まずTermを一つ読む
 　e = BinOp(PLUSもしくはMINUS, e, 次のTerm)
 こうして、Exprは左結合の構文木になる
 4) Term
-Termは、まずFactorを一つ読む
+Termは、まずUnaryを一つ読む
 次のトークンがMUL,DIVである限り、繰り返す
-　t = BinOp(MULもしくはDIV, t, 次のFactor)
+　e = BinOp(MULもしくはDIV, t, 次のUnary)
 こうして、Termは優先度の高い左結合になる
+6) Unary
+Unaryは、まずFactorを一つ読む
+次のトークンがINTである限り、繰り返す
+  e = UnaryOp(MINUS, e, 次のFactor)
+こうして、Unaryは優先度の高い左結合となる
 5) Factor
 ・次のトークンがINT(value)の場合
 INTを消費し、IntLit(value)を返す
@@ -120,7 +126,7 @@ INT, PLUS, MINUS, MUL, DIV, LPAREN, RPAREN, EOF
 ・Parser
 責務：List<Token>からExprを作成
 公開：Expr parse(List<Token> tokens) throw ParseError
-内部：parseExpr(), parseTerm(), parseFactor()の三段階
+内部：parseExpr(), parseTerm(), parseUnary(), parseFactor()の三段階
 保証：成功時、ASTは構文的に正しい
 
 # AST

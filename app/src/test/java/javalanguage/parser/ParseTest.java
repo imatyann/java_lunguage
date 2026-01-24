@@ -84,6 +84,7 @@ public class ParseTest {
     @Test
     void parse_minus_left_assoc() throws ParseError {
         Parser p = new Parser();
+        // 1 - 2 - 3
         List<Token> ts = List.of(
                 new Token(TokenType.INT, 0, 1),
                 new Token(TokenType.MINUS, 1),
@@ -100,6 +101,41 @@ public class ParseTest {
         assertEquals(TokenType.MINUS, top.op);
         assertTrue(top.left instanceof javalanguage.ast.BinOp);
     }
+
+    @Test
+    void parse_unary() throws ParseError {
+        Parser p = new Parser();
+        // 1 + 2 * -3
+        List<Token> ts = List.of(
+                new Token(TokenType.INT, 0, 1),
+                new Token(TokenType.PLUS, 1),
+                new Token(TokenType.INT, 2, 2),
+                new Token(TokenType.MUL, 3),
+                new Token(TokenType.MINUS, 4),
+                new Token(TokenType.INT, 5, 3),
+                new Token(TokenType.EOF, 6)
+        );
+
+        Expr e = p.parse(ts);
+        assertTrue(e instanceof javalanguage.ast.BinOp);
+
+        javalanguage.ast.BinOp top = (javalanguage.ast.BinOp) e;
+
+        assertTrue(top.left instanceof javalanguage.ast.IntLit);
+        assertEquals(1, ((javalanguage.ast.IntLit) top.left).value);
+
+        assertTrue(top.right instanceof javalanguage.ast.BinOp);
+        javalanguage.ast.BinOp right = (javalanguage.ast.BinOp) top.right;
+        assertEquals(TokenType.MUL, right.op);
+
+        assertTrue(right.left instanceof javalanguage.ast.IntLit);
+        assertEquals(2, ((javalanguage.ast.IntLit) right.left).value);
+
+        assertTrue(right.right instanceof javalanguage.ast.UnaryOp);
+        assertEquals(TokenType.MINUS, ((javalanguage.ast.UnaryOp) right.right).op);
+
+    }
+
 
 
 

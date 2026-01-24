@@ -3,6 +3,7 @@ package javalanguage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javalanguage.token.Token;
@@ -29,16 +30,18 @@ public class Main {
         try {
             if (args.length >= 2 && args[0].equals("--file")) {
                 source = Files.readString(Path.of(args[1]));
+
             } else {
                 source = (args.length >= 1) ? String.join(" ", args) : "";
             }
+                List<String> sources = Arrays.asList(source.split(";"));
+                for (String s: sources){
+                    List<Token> tokens = lexer.tokenize(s);
+                    Expr ex = parser.parse(tokens);
+                    int result = eval.eval(ex);
 
-            
-            List<Token> tokens = lexer.tokenize(source);
-            Expr ex = parser.parse(tokens);
-            int result = eval.eval(ex);
-
-            System.out.print(result);
+                    System.out.println(result);
+                };       
         } catch (LangError e) {
             System.err.println("pos=" + e.pos + ": " + e.message);
             System.exit(1);

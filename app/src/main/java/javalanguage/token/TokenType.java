@@ -7,5 +7,6 @@ public enum TokenType {
     DIV,    // /
     LPAREN, // (
     RPAREN, // )
+    Var,    //変数リテラル
     EOF,    //入力終了
 }

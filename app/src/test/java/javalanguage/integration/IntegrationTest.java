@@ -64,4 +64,18 @@ public class IntegrationTest {
 
         assertThrows(LexError.class, () -> lexer.tokenize(source));
     }
+
+    @Test
+    void eval_unary() throws LexError, ParseError, RuntimeError {
+        Lexer lexer = new Lexer();
+        Parser parser = new Parser();
+        Evaluator evaluator = new Evaluator();
+
+        String source = "1 + 2 * -3";
+        List<Token> tokens = lexer.tokenize(source);
+        Expr expr = parser.parse(tokens);
+        int result = evaluator.eval(expr);
+
+        assertEquals(-5, result);
+    }
 }
