@@ -7,6 +7,8 @@ import org.jspecify.annotations.NonNull;
 import javalanguage.ast.Expr;
 import javalanguage.ast.IntLit;
 import javalanguage.ast.UnaryOp;
+import javalanguage.ast.Var;
+import javalanguage.ast.Assign;
 import javalanguage.ast.BinOp;
 import javalanguage.error.ParseError;
 import javalanguage.token.Token;
@@ -20,9 +22,29 @@ public class Parser {
         this.tokens = tokens;
         this.pos = 0;
 
-        Expr e = parseExpr();
+        Expr e = parseAssign();
         consume(TokenType.EOF);
         return e;
+    }
+
+    // 変数式を評価する
+    private Expr parseAssign() throws ParseError {
+        Expr e = parseExpr();
+        
+        Token t = current();
+        TokenType ty = t.type;
+        if (ty == TokenType.EQUAL){
+            if (e instanceof Var){
+                consume(ty);
+                Expr rhs = parseExpr();
+                e = new Assign((Var) e, rhs, t.pos);
+            } else {
+                throw new ParseError(0, "Expected VAR but found " + e.getClass());
+            };
+        };
+
+        return e;
+            
     }
 
     // 現在読んでいる箇所から始まる加減算式を翻訳し、BinOp式を出力する関数
@@ -85,8 +107,10 @@ public class Parser {
             Expr e = parseExpr();
             consume(TokenType.RPAREN);
             return e;
-        
-        }
+        } else if (t.type == TokenType.VAR) {
+            consume(TokenType.VAR);
+            return new Var(t.name, t.pos);
+        };
 
         throw new ParseError(t.pos, "Expected INT but found " + t.type);
     }

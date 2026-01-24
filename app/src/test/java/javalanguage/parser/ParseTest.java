@@ -136,6 +136,53 @@ public class ParseTest {
 
     }
 
+    @Test
+    void parse_assign() throws ParseError {
+        Parser p = new Parser();
+        // x = 3;
+        List<Token> ts = List.of(
+                new Token(TokenType.VAR, 0, "x"),
+                new Token(TokenType.EQUAL, 1),
+                new Token(TokenType.INT, 2, 3),
+                new Token(TokenType.EOF, 3)
+        );
+
+        Expr e = p.parse(ts);
+        assertTrue(e instanceof javalanguage.ast.Assign);
+
+        javalanguage.ast.Assign top = (javalanguage.ast.Assign) e;
+
+        assertTrue(top.target instanceof javalanguage.ast.Var);
+        assertEquals("x", ((javalanguage.ast.Var) top.target).name);
+
+        assertTrue(top.value instanceof javalanguage.ast.IntLit);
+        assertEquals(3, ((javalanguage.ast.IntLit) top.value).value);
+    }
+
+    @Test
+    void parse_expr_var() throws ParseError {
+        Parser p = new Parser();
+        // x + 3;
+        List<Token> ts = List.of(
+                new Token(TokenType.VAR, 0, "x"),
+                new Token(TokenType.PLUS, 1),
+                new Token(TokenType.INT, 2, 3),
+                new Token(TokenType.EOF, 3)
+        );
+
+        // BinOp(PLUS, Var(x), IntLit(3))
+        Expr e = p.parse(ts);
+        assertTrue(e instanceof javalanguage.ast.BinOp);
+
+        javalanguage.ast.BinOp top = (javalanguage.ast.BinOp) e;
+
+        assertTrue(top.left instanceof javalanguage.ast.Var);
+        assertEquals("x", ((javalanguage.ast.Var) top.left).name);
+
+        assertTrue(top.right instanceof javalanguage.ast.IntLit);
+        assertEquals(3, ((javalanguage.ast.IntLit) top.right).value);
+    }
+
 
 
 

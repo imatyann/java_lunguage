@@ -20,7 +20,7 @@ public final class Token {
         this.type = type;
         this.pos = pos;
         this.value = 0;
-        this.name = "";
+        this.name = name;
     }
 
     // それ以外でのトークンのコンストラクタ
